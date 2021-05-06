@@ -1,0 +1,45 @@
+may
+	add main cat
+		add  sub cat / product
+			product
+			
+			
+table
+	month details {id, name, year}
+	Product {id, monthid, catid, name, price, catOrNot(y/n)}
+	
+Budjet screen
+ -> add new month budjet
+	@@@@@@@@@@@@@@@@@@
+	Month : {select box}
+
+-> Click on month
+	product screen
+
+CREATE TABLE IF NOT EXISTS `Product` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `monthid` bigint(20) NOT NULL,
+  `catid` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+);
+
+INSERT INTO `month` (`id`, `name`, `year`) VALUES
+(1, 'Januvary', 2019),
+(2, 'Februvary', 2019),
+(6, 'March', 2018);
+
+
+> Edit Button Set
+> edit page : search request (add, update)
+> collect values, add edit
+> set hidden values
+> Js validations
+> Update Query
+> Make Category Option
+	> onclick 
+		Product {id, monthid, catid, name, price, catOrNot(y/n)}
+		
+		insert new product set catid = new(id), all others are same
+		update product price = 0, catOrNot = Y where id = exiisting
+		
