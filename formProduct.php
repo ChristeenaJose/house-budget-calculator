@@ -15,8 +15,13 @@ function myFunction() {
 }
 
 function myFunctionCatName(catName) {
-	var a = document.getElementById('fname'); 
-	a.value = catName;
+	var a = document.getElementById('fname');
+	var sel = document.getElementById('fcat');
+	if (sel && sel.value !== "0" && sel.options[sel.selectedIndex]) {
+		a.value = sel.options[sel.selectedIndex].text;
+	} else {
+		a.value = catName;
+	}
 }
 
 </script>
@@ -36,6 +41,26 @@ function myFunctionCatName(catName) {
 	$descValue = "";
 	$catValue = "";
 	$makeCat = false;
+	$productDetails = array('name' => '');
+	$selectedCatId = 0;
+	$categoryList = false;
+
+	if(isset($_REQUEST['monthId']) && $_REQUEST['monthId'] > 0){
+		$classVar->ensureDefaultCategories($_REQUEST['monthId']);
+		$categoryList = $classVar->getCategories($_REQUEST['monthId']);
+	}
+	if(isset($_REQUEST['catid']) && $_REQUEST['catid'] > 0){
+		$selectedCatId = $_REQUEST['catid'];
+	}
+	else if(isset($_REQUEST['catId']) && $_REQUEST['catId'] > 0){
+		$selectedCatId = $_REQUEST['catId'];
+	}
+	if($selectedCatId > 0){
+		$productDetails = $classVar->getProductById($selectedCatId);
+		if(!$productDetails){
+			$productDetails = array('name' => '');
+		}
+	}
 	
 	if(isset($_REQUEST['action']) && $_REQUEST['action'] == 'update' && isset($_REQUEST['proId']) && $_REQUEST['proId'] > 0){
 		$action = "Edit";
@@ -51,6 +76,9 @@ function myFunctionCatName(catName) {
 			$priceValue = $resultArr['price'];
 			$descValue = $resultArr['description'];
 			$catValue = $resultArr['catOrNot'];
+			if($resultArr['catid'] > 0){
+				$selectedCatId = $resultArr['catid'];
+			}
 			if($catValue == 'N'){
 				$makeCat = true;
 			}
@@ -84,23 +112,24 @@ function myFunctionCatName(catName) {
 								print($monthDetails['name']);
 							?><input type="hidden" id="fmonth" name="monthId" value="<?php print($_REQUEST['monthId']); ?>">
 						</div>
-					</div><?php
-			  
-					if(isset($_REQUEST['catId'])){
-						?><div class="row">
-							<div class="col-25">
-								<label for="fcat">Category</label>
-							</div>
-							<div class="col-25"><?php
-									$productDetails = $classVar->getProductById($_REQUEST['catId']);
-									print($productDetails['name']);
-								?><input type="hidden" id="fcat" name="catid" value="<?php print($_REQUEST['catId']); ?>">
-							</div>
-						</div><?php
-						
-					}
-					
-					?><div class="row">
+					</div>
+					<div class="row">
+						<div class="col-25">
+							<label for="fcat">Expense category</label>
+						</div>
+						<div class="col-75">
+							<select id="fcat" name="catid">
+								<option value="0">Top level</option><?php
+								if($categoryList){
+									foreach($categoryList AS $catKey => $catValueRow){
+										$isSelected = ($selectedCatId == $catValueRow["id"]) ? ' selected="selected"' : '';
+										?><option value="<?php print($catValueRow["id"]); ?>"<?php print($isSelected); ?>><?php print($catValueRow["name"]); ?></option><?php
+									}
+								}
+							?></select>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-25">
 							<label for="fname">Name</label>
 						</div>

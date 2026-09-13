@@ -16,6 +16,7 @@ if(isset($_REQUEST['monthId']) && $_REQUEST['monthId'] > 0){
 	//Month details
 	$monthId = $_REQUEST['monthId'];
 	$monthDetails = $classVar->getMonthById($monthId);
+	$classVar->ensureDefaultCategories($monthId);
 		
 	//Category details
 	$catId = 0;
@@ -81,6 +82,7 @@ if(isset($_REQUEST['monthId']) && $_REQUEST['monthId'] > 0){
 									<a href="monthdetails.php?monthId=<?php print($value["monthid"]); ?>&catId=<?php print($value["id"]); ?>"><?php 
 										print($value["name"]); 
 									?></a>
+									<span class="category-badge">Category</span>
 								</td><?php
 								
 								$resultSum = $classVar->getProductSum($value["monthid"], $value["id"]);

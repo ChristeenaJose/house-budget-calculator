@@ -8,6 +8,9 @@
 //Class for db connection
 class dbConnection{
 	
+	function __construct(){
+		$this->dbConnection();
+	}
 	function dbConnection(){
 		$this->conn = $this->OpenCon();
 		$this->debug = false;
@@ -78,6 +81,8 @@ class dbConnection{
 		$result = $this->conn->query($sql);
 		
 		if ($result === TRUE) {
+			$monthId = $this->conn->insert_id;
+			$this->ensureDefaultCategories($monthId);
 			return $result;
 		} else {
 			print( "Error: " . $sql . "<br>" . $conn->error);
@@ -278,6 +283,70 @@ class dbConnection{
 		}
 	}
 	
+	function getDefaultCategoryNames(){
+		return array('Faustina', 'Fiona');
+	}
+
+	function getCategories($monthId){
+		$monthId = intval($monthId);
+		$sql = "SELECT id, name, catid
+				FROM product
+				WHERE monthid = " . $monthId . "
+				AND catOrNot = 'Y'
+				ORDER BY name";
+
+		if($this->debug){print($sql. '<br/>');}
+		$result = $this->conn->query($sql);
+		if ($result && $result->num_rows > 0) {
+			$newArray = array();
+			$i = 1;
+			while($row = $result->fetch_assoc()) {
+				$newArray[$i]["id"] = $row["id"];
+				$newArray[$i]["name"] = $row["name"];
+				$newArray[$i]["catid"] = $row["catid"];
+				$i++;
+			}
+			return $newArray;
+		}
+		return false;
+	}
+
+	function categoryExists($monthId, $name){
+		$monthId = intval($monthId);
+		$nameEsc = $this->conn->real_escape_string($name);
+		$sql = "SELECT id FROM product
+				WHERE monthid = " . $monthId . "
+				AND catOrNot = 'Y'
+				AND name = '" . $nameEsc . "'
+				LIMIT 1";
+
+		if($this->debug){print($sql. '<br/>');}
+		$result = $this->conn->query($sql);
+		return $result && $result->num_rows > 0;
+	}
+
+	function ensureDefaultCategories($monthId){
+		$monthId = intval($monthId);
+		if($monthId <= 0){
+			return false;
+		}
+		foreach($this->getDefaultCategoryNames() as $name){
+			if(!$this->categoryExists($monthId, $name)){
+				$details = array(
+					'monthId' => $monthId,
+					'catid' => 0,
+					'name' => $name,
+					'price' => 0,
+					'date' => date('Y-m-d'),
+					'catOrNot' => 'Y',
+					'desc' => 'Default expense category'
+				);
+				$this->insertProduct($details);
+			}
+		}
+		return true;
+	}
+
 	function deleteProduct($id){
 		$sql = "DELETE FROM product WHERE id=" . $id;
 
