@@ -1,0 +1,80 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; font-family: "Segoe UI", sans-serif; background: #f4f1fb; color: #2c2540; }
+.app { min-height: 100vh; }
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 28px;
+  background: #36304a;
+  color: #fff;
+}
+.brand { font-size: 20px; font-weight: 700; }
+nav { display: flex; gap: 8px; flex: 1; }
+.nav-btn {
+  border: 0;
+  background: transparent;
+  color: #d7d0ea;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+.nav-btn.active, .nav-btn:hover { background: #5cb85c; color: #fff; }
+.status {
+  background: #2e7d32;
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+.status.offline { background: #c62828; }
+main { padding: 28px; max-width: 1100px; margin: 0 auto; }
+.hidden { display: none !important; }
+.page-head { display: flex; justify-content: space-between; align-items: center; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(54, 48, 74, 0.08);
+}
+.card span { color: #7a7190; }
+.card strong { display: block; font-size: 28px; margin-top: 8px; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #eee; }
+th { background: #f7f4fb; color: #5a5270; font-weight: 600; }
+.primary, button[type="submit"] {
+  background: #5cb85c;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.inline-form { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.inline-form input, .inline-form select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 20, 50, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-card {
+  background: #fff;
+  width: min(460px, 92vw);
+  padding: 24px;
+  border-radius: 16px;
+  display: grid;
+  gap: 10px;
+}
+.modal-card label { display: grid; gap: 4px; font-size: 14px; }
+.modal-card input, .modal-card select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.error { color: #c62828; }
+@media (max-width: 800px) {
+  .topbar { flex-wrap: wrap; }
+  .cards { grid-template-columns: 1fr; }
+}
